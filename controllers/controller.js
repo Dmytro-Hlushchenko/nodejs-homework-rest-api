@@ -55,30 +55,30 @@ const add = async (req, res, next) => {
 //     }
 // };
 
-// const updateById = async (req, res, next) => {
-//     try {
-//         const { contactId } = req.params;
-//         const result = await serviceContacts.updateContact(contactId, req.body);
-//         if (!result) {
-//             throw HttpError(404, `Contact with id=${contactId} is not found`);
-//         };
+const updateById = async (req, res, next) => {
+    try {
+        const { contactId } = req.params;
+        const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true });
+        if (!result) {
+            throw HttpError(404, `Contact with id=${contactId} is not found`);
+        };
         
-//         const { error } = contactUpdateSchema.validate(req.body);
-//         if (error) {
-//             throw HttpError(400, error.message);
-//         }
+        const { error } = contactUpdateSchema.validate(req.body);
+        if (error) {
+            throw HttpError(400, error.message);
+        }
         
-//         res.json(result);
+        res.json(result);
         
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+    } catch (error) {
+        next(error);
+    }
+};
 
 export default {
     getAll,
     getById,
     add,
     // removeContact,
-    // updateById,
+    updateById,
 };
