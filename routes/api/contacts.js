@@ -1,18 +1,19 @@
 import { Router } from 'express';
 import controller from '../../controllers/controller.js';
-import { isEmptyBody } from "../../middlewares/index.js";
+import { isEmptyBody, isValidId } from "../../middlewares/index.js";
+
 
 const router = Router();
 
 router.get('/', controller.getAll);
 
-// router.get('/:contactId', controller.getById);
+router.get('/:contactId', isValidId, controller.getById);
 
 router.post('/', isEmptyBody, controller.add);
 
-// router.put('/:contactId', isEmptyBody, controller.updateById);
+// router.put('/:contactId', isValidId, isEmptyBody, controller.updateById);
 
-// router.delete('/:contactId', controller.removeContact );
+// router.delete('/:contactId', isValidId, controller.removeContact );
 
 
 

@@ -1,6 +1,6 @@
 import Contact from "../models/Contact.js";
 import { HttpError } from "../helpers/index.js";
-import { contactsAddSchema, contactUpdateSchema } from "../schemas/contacts-schemas.js";
+import { contactsAddSchema, contactUpdateSchema } from "../models/Contact.js";
 
 const getAll = async (req, res, next) => {
     try {
@@ -11,21 +11,21 @@ const getAll = async (req, res, next) => {
     }
 };
 
-// const getById = async (req, res, next) => {
-//     try {
-//         const { contactId } = req.params;
-//         const result = await serviceContacts.getContactById(contactId);
+const getById = async (req, res, next) => {
+    try {
+        const { contactId } = req.params;
+        const result = await Contact.findById(contactId);
         
-//         if (!result) {
-//             throw HttpError(404, `Contact with id=${contactId} is not found`);
-//         };
+        if (!result) {
+            throw HttpError(404, `Contact with id=${contactId} is not found`);
+        };
 
-//         res.json(result);
+        res.json(result);
 
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+    } catch (error) {
+        next(error);
+    }
+};
 
 const add = async (req, res, next) => {
     try {
@@ -77,7 +77,7 @@ const add = async (req, res, next) => {
 
 export default {
     getAll,
-    // getById,
+    getById,
     add,
     // removeContact,
     // updateById,
