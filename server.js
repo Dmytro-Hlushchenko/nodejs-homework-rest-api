@@ -1,12 +1,13 @@
 import { mongoose } from 'mongoose';
 import app from './app.js'
 
-const DB_HOST = 'mongodb+srv://Dima:V4QGuv9T7pkkxbeA@cluster0.bwi6msn.mongodb.net/';
+const { DB_HOST, PORT = 3000 } = process.env;
+
 mongoose.connect(DB_HOST)
   .then(() => {
-    app.listen(3000, () => {
+    app.listen(PORT, () => {
       console.log("Database connection successful");
-      console.log("Server running. Use our API on port: 3000");
+      console.log(`Server running. Use our API on port: ${PORT}`);
     });
   })
   .catch(error => {
@@ -15,4 +16,3 @@ mongoose.connect(DB_HOST)
   });
 
 
-// MongoDB: pass:V4QGuv9T7pkkxbeA login:Dima;

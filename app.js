@@ -1,8 +1,12 @@
-import express, { json } from 'express';
-import logger from 'morgan';
-import cors from 'cors';
+import express, { json } from "express";
+import logger from "morgan";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 
 import contactsRouter from './routes/api/contacts.js';
+
+dotenv.config();
 
 const app = express();
 
@@ -18,7 +22,7 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, next) => {mongoose
   res.status(err.status).json({ message: err.message });
 });
 

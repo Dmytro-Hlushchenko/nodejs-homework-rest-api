@@ -6,13 +6,13 @@ const router = Router();
 
 router.get('/', controller.getAll);
 
-router.get('/:contactId', controller.getById);
+// router.get('/:contactId', controller.getById);
 
 router.post('/', isEmptyBody, controller.add);
 
-router.put('/:contactId', isEmptyBody, controller.updateById);
+// router.put('/:contactId', isEmptyBody, controller.updateById);
 
-router.delete('/:contactId', controller.removeContact );
+// router.delete('/:contactId', controller.removeContact );
 
 
 
