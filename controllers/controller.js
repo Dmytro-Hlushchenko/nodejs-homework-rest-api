@@ -1,6 +1,6 @@
 import Contact from "../models/Contact.js";
 import { HttpError } from "../helpers/index.js";
-import { contactsAddSchema, contactUpdateSchema } from "../models/Contact.js";
+import { contactsAddSchema, contactUpdateSchema, contactStatusSchema } from "../models/Contact.js";
 
 const getAll = async (req, res, next) => {
     try {
@@ -41,24 +41,24 @@ const add = async (req, res, next) => {
     };
 };
 
-// const removeContact = async (req, res, next) => {
-//     try {
-//         const { contactId } = req.params;
-//         const result = await serviceContacts.removeContact(contactId);
-//         if (!result) {
-//             throw HttpError(404, `Contact with id=${contactId} is not found`)
-//         };
-//         res.json({ message: "contact deleted" });
+const removeContact = async (req, res, next) => {
+    try {
+        const { contactId } = req.params;
+        const result = await Contact.findByIdAndDelete(contactId);
+        if (!result) {
+            throw HttpError(404, `Contact with id=${contactId} is not found`)
+        };
+        res.json({ message: "contact deleted" });
     
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+    } catch (error) {
+        next(error);
+    }
+};
 
 const updateById = async (req, res, next) => {
     try {
         const { contactId } = req.params;
-        const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true });
+        const result = await Contact.findByIdAndUpdate(contactId, req.body);
         if (!result) {
             throw HttpError(404, `Contact with id=${contactId} is not found`);
         };
@@ -75,10 +75,30 @@ const updateById = async (req, res, next) => {
     }
 };
 
+const updateStatusContact = async (req, res, next) => {
+    try {
+        const { contactId } = req.params;
+        const result = await Contact.findByIdAndUpdate(contactId, req.body);
+        if (!result) {
+            throw HttpError(404, `Contact with id=${contactId} is not found`);
+        };
+        
+        const { error } = contactStatusSchema.validate(req.body);
+        if (error) {
+            throw HttpError(400, error.message);
+        }
+        
+        res.json(result);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export default {
     getAll,
     getById,
     add,
-    // removeContact,
+    removeContact,
     updateById,
+    updateStatusContact,
 };

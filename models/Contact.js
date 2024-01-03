@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import Joi from "joi";
-import { handleOnSaveError } from "./hooks.js";
+import { handleOnSaveError, addUpdatesSettings } from "./hooks.js";
 
 export const contactsAddSchema = Joi.object(
     {
@@ -20,6 +20,10 @@ export const contactUpdateSchema = Joi.object(
     }
 );
 
+export const contactStatusSchema = Joi.object({
+    favorite: Joi.boolean().required(),
+});
+
 const contactSchema = new Schema({
     name: {
         type: String,
@@ -37,7 +41,9 @@ const contactSchema = new Schema({
     },
 }, { versionKey: false, timestamps: true });
 
-contactSchema.post("save", handleOnSaveError)
+contactSchema.post("save", handleOnSaveError);
+contactSchema.pre("findOneAndUpdate", addUpdatesSettings);
+contactSchema.post("findOneAndUpdate", handleOnSaveError);
 
 const Contact = model("contact", contactSchema);
 
