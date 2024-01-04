@@ -3,8 +3,8 @@ export const handleOnSaveError = (error, data, next) => {
     next();
 };
 
-export const addUpdatesSettings = function (next) { 
+export const addUpdatesSettings = function (next) {
     this.options.new = true;
     this.options.new = true;
     next();
-}
+};
