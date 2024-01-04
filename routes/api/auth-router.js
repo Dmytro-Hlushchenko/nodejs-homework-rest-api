@@ -5,6 +5,6 @@ import authController from "../../controllers/auth-controller.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/users/register", isEmptyBody, authController.userRegister);
+authRouter.post("/", isEmptyBody, authController.userRegister);
 
 export default authRouter;

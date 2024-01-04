@@ -17,8 +17,8 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(json());
 
-app.use("/api/auth", authRouter);
-app.use('/api/contacts', contactsRouter);
+app.use("/api/users/register", authRouter);
+app.use("/api/contacts", contactsRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });
