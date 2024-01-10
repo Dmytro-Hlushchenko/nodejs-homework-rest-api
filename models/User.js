@@ -18,7 +18,9 @@ const userSchema = new Schema({
         enum: ["starter", "pro", "business"],
         default: "starter"
     },
-    token: String
+    token: {
+        type: String,
+    },
 
 }, { versionKey: false, timestamps: true });
 
@@ -30,7 +32,6 @@ export const userRegistrationSchema = Joi.object({
     email: Joi.string().required(),
     password: Joi.string().required(),
 });
-
 export const userLoginSchema = Joi.object({
     email: Joi.string().required(),
     password: Joi.string().required(),
@@ -38,4 +39,4 @@ export const userLoginSchema = Joi.object({
 
 const User = model("user", userSchema);
 
-export default User;
+export default User;  

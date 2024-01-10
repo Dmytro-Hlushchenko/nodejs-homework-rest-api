@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import controller from '../../controllers/controller.js';
-import { isEmptyBody, isValidId,  } from "../../middlewares/index.js";
+import { isEmptyBody, isValidId, authenticate  } from "../../middlewares/index.js";
 
 
 const router = Router();
+
+router.use(authenticate);
 
 router.get('/', controller.getAll);
 

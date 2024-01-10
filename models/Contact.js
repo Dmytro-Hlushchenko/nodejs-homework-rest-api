@@ -34,6 +34,11 @@ const contactSchema = new Schema({
     phone: {
         type: String,
     },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+        required: true,
+    },
     favorite: {
         type: Boolean,
         default: false,
