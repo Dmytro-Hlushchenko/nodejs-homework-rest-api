@@ -1,6 +1,6 @@
 import Contact from "../models/Contact.js";
 import { HttpError } from "../helpers/index.js";
-import { contactsAddSchema, contactUpdateSchema, contactStatusSchema } from "../models/Contact.js";
+import { contactStatusSchema, } from "../models/Contact.js";
 
 const getAll = async (req, res, next) => {
     try {
@@ -32,25 +32,17 @@ const getById = async (req, res, next) => {
 };
 
 const add = async (req, res, next) => {
-    try {
-        const { error } = contactsAddSchema.validate(req.body);
-        if (error) {
-            throw HttpError(400, `missing field ${error.message}`);
-        }
+    
         const { _id: owner } = req.user;
         const result = await Contact.create({ ...req.body, owner });
         res.status(201).json(result);
-    }   
-    catch (error) {
-        next(error);
-    };
 };
 
 const removeContact = async (req, res, next) => {
     try {
         const { id: _id } = req.params;
         const { _id: owner } = req.user;
-        const result = await Contact.findOneAndDelete({_id: owner});
+        const result = await Contact.findOneAndDelete({ _id: owner });
         if (!result) {
             throw HttpError(404, `Contact with id=${id} is not found`)
         };
@@ -62,44 +54,26 @@ const removeContact = async (req, res, next) => {
 };
 
 const updateById = async (req, res, next) => {
-    try {
-        const { id: _id } = req.params;
-        const { _id: owner } = req.user;
-        const result = await Contact.findOneAndUpdate({_id, owner}, req.body);
-        if (!result) {
-            throw HttpError(404, `Contact with id=${id} is not found`);
-        };
+    const { id: _id } = req.params;
+    const { _id: owner } = req.user;
+    const result = await Contact.findOneAndUpdate({ _id, owner }, req.body);
+    if (!result) {
+        throw HttpError(404, `Contact with id=${id} is not found`);
+    };
         
-        const { error } = contactUpdateSchema.validate(req.body);
-        if (error) {
-            throw HttpError(400, error.message);
-        }
-        
-        res.json(result);
-        
-    } catch (error) {
-        next(error);
-    }
+    res.json(result);
 };
 
 const updateStatusContact = async (req, res, next) => {
-    try {
-        const { id: _id } = req.params;
-        const { _id: owner } = req.user;
-        const result = await Contact.findOneAndUpdate({_id, owner}, req.body);
-        if (!result) {
-            throw HttpError(404, `Contact with id=${id} is not found`);
-        };
+
+    const { id: _id } = req.params;
+    const { _id: owner } = req.user;
+    const result = await Contact.findOneAndUpdate({ _id, owner }, req.body);
+    if (!result) {
+        throw HttpError(404, `Contact with id=${id} is not found`);
+    };
         
-        const { error } = contactStatusSchema.validate(req.body);
-        if (error) {
-            throw HttpError(400, error.message);
-        }
-        
-        res.json(result);
-    } catch (error) {
-        next(error);
-    }
+    res.json(result);
 };
 
 export default {
