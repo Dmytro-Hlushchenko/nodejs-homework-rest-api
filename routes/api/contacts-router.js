@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import controller from '../../controllers/controller.js';
+import controller from '../../controllers/contacts-controller.js';
 import { isEmptyBody, isValidId, authenticate } from "../../middlewares/index.js";
 import { validateBody }  from "../../decorators/index.js";
 import { contactsAddSchema, contactUpdateSchema, contactStatusSchema } from "../../models/Contact.js";

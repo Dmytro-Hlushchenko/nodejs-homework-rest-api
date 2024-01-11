@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 
 import authRouter from "./routes/api/auth-router.js";
-import contactsRouter from './routes/api/contacts.js';
+import contactsRouter from './routes/api/contacts-router.js';
 
 dotenv.config();
 
