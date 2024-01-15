@@ -57,13 +57,11 @@ const userLogin = async (req, res) => {
         }
     });
 };
-
 const getCurrent = async (req, res) => {
     const { email, subscription} = req.user;
 
     res.json({ email, subscription });
 };
-
 const logout = async (req, res) => {
     const { _id } = req.user;
     await User.findByIdAndUpdate(_id, { token: "" });
@@ -79,3 +77,4 @@ export default {
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
 };
+  
