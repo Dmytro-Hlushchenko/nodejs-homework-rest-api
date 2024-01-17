@@ -1,6 +1,5 @@
 import Contact from "../models/Contact.js";
 import { HttpError } from "../helpers/index.js";
-import { contactStatusSchema, } from "../models/Contact.js";
 
 const getAll = async (req, res, next) => {
     try {
@@ -32,10 +31,9 @@ const getById = async (req, res, next) => {
 };
 
 const add = async (req, res) => {
-    
-        const { _id: owner } = req.user;
-        const result = await Contact.create({ ...req.body, owner });
-        res.status(201).json(result);
+    const { _id: owner } = req.user;
+    const result = await Contact.create({ ...req.body, owner });
+    res.status(201).json(result);
 };
 
 const removeContact = async (req, res, next) => {
@@ -82,4 +80,4 @@ export default {
     removeContact,
     updateById,
     updateStatusContact,
-};
+};  
