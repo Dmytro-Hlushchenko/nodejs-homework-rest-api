@@ -18,7 +18,6 @@ if (!JWT_SECRET) {
     process.exit(1);
 }
 
-
 const userRegister = async (req, res) => {
     
     const { email, password } = req.body;
@@ -28,13 +27,9 @@ const userRegister = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
+    const avatarURL = gravatar.url(email);
 
-    const gravatarURL = gravatar.url(email);
-    const avatarArray = gravatarURL.split('.');
-    const avatarURL = avatarArray.length > 1 ? avatarArray.slice(1).join('.') : "";
-
-
-    const newUser = await User.create({ ...req.body, avatarURL, password: hashPassword });
+    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL });
     res.status(201).json({
         user: {
             email: newUser.email,
@@ -43,24 +38,21 @@ const userRegister = async (req, res) => {
     });
 };
 const updateAvatar = async (req, res) => {
+    const { _id } = req.user;
     const { path: oldPath, filename } = req.file;
     const newPath = path.join(avatarPath, filename);
     await fs.rename(oldPath, newPath);
     const newAvatarURL = path.join("avatars", filename);
-    console.log(newAvatarURL);
 
-    const result = await User.findOneAndUpdate({ avatarURL: newAvatarURL });
+    const result = await User.findByIdAndUpdate(_id, { newAvatarURL });
+    console.log(result);
     if (!result) {
         return res.status(401).json({ error: "Unauthorized" });
     }
     res.json({
-        user: {
-            avatarURL: result.avatarURL,
-        }
+        newAvatarURL,
     });
 };
-
-
 const userLogin = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
