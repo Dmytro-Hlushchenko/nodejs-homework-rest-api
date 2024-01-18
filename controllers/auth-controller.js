@@ -7,6 +7,7 @@ import gravatar from "gravatar";
 import path from "path";
 import jwt from "jsonwebtoken";
 import fs from "fs/promises";
+import Jimp from "jimp";
 
 const avatarPath = path.resolve("public", "avatars");
 
@@ -40,17 +41,22 @@ const userRegister = async (req, res) => {
 const updateAvatar = async (req, res) => {
     const { _id } = req.user;
     const { path: oldPath, filename } = req.file;
-    const newPath = path.join(avatarPath, filename);
-    await fs.rename(oldPath, newPath);
-    const newAvatarURL = path.join("avatars", filename);
 
-    const result = await User.findByIdAndUpdate(_id, { newAvatarURL });
-    console.log(result);
+    const img = await Jimp.read(oldPath);
+    await img.cover(250, 250).writeAsync(oldPath);
+
+    const newPath = path.join(avatarPath, filename);
+
+    await fs.rename(oldPath, newPath);
+    const avatarURL = path.join("avatars", filename);
+
+    const result = await User.findByIdAndUpdate(_id, { avatarURL });
+
     if (!result) {
         return res.status(401).json({ error: "Unauthorized" });
     }
     res.json({
-        newAvatarURL,
+        avatarURL,
     });
 };
 const userLogin = async (req, res) => {
