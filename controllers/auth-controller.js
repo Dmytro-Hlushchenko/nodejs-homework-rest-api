@@ -2,7 +2,7 @@ import "dotenv/config";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import { ctrlWrapper } from "../decorators/index.js";
-import { HttpError } from "../helpers/index.js";
+import { HttpError, sendEmail } from "../helpers/index.js";
 import gravatar from "gravatar";
 import path from "path";
 import jwt from "jsonwebtoken";
