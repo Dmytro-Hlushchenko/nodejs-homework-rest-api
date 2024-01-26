@@ -31,7 +31,7 @@ const userRegister = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
     const verificationToken = nanoid();
     const avatarURL = gravatar.url(email);
-    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL });
+    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL, verificationToken });
     
     const verifyEmail = {
         from: UKR_NET_FROM,
@@ -49,6 +49,21 @@ const userRegister = async (req, res) => {
         }
     });
 };
+
+const verify = async (req, res) => {
+    const { verificationToken } = req.params;
+    const user = await User.findOne({ verificationToken });
+    if (!user) { 
+        throw HttpError(404, "User not found");
+    };
+
+    await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: "" });
+
+    res.json({
+        message: 'Verification successful',
+    });
+};
+
 const updateAvatar = async (req, res) => {
     if (!req.file){
         throw HttpError(400, "No avatar file uploaded");
@@ -79,7 +94,13 @@ const userLogin = async (req, res) => {
     if (!user) {
         throw HttpError(401, "Email or password is wrong");
     };
+
+    if (!user.verify) { 
+        throw HttpError(404, "User not found");
+    };
+
     const passwordCompare = await bcrypt.compare(password, user.password);
+
     if (!passwordCompare) {
         throw HttpError(401, "Email or password is wrong"); 
     };
@@ -114,6 +135,7 @@ const logout = async (req, res) => {
 
 export default {  
     userRegister: ctrlWrapper(userRegister),
+    verify: ctrlWrapper(verify),
     updateAvatar: ctrlWrapper(updateAvatar),
     userLogin: ctrlWrapper(userLogin),
     getCurrent: ctrlWrapper(getCurrent),

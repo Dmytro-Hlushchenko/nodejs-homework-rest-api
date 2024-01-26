@@ -8,6 +8,7 @@ import authController from "../../controllers/auth-controller.js";
 const authRouter = express.Router();
 
 authRouter.post("/register", isEmptyBody, validateBody(userRegistrationSchema), authController.userRegister);
+authRouter.get("/verify/:verificationToken", authController.verify);
 authRouter.post("/login", isEmptyBody, validateBody(userLoginSchema), authController.userLogin);
 authRouter.get("/current", authenticate, authController.getCurrent);
 authRouter.post("/logout", authenticate, authController.logout);
