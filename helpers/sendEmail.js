@@ -15,20 +15,13 @@ const nodemailerConfig = {
 
 const transport = nodemailer.createTransport(nodemailerConfig);
 
-const data = {
-  from: UKR_NET_FROM,
-  to: "kariy18528@bitofee.com",
-  subject: "TEST EMAIL",
-  html: "<p>test email</p>"
-};
-
-const sendEmail = data => {
+const sendEmail = (data) => {
     const email = { ...data, from: UKR_NET_FROM };
     return transport.sendMail(email);
 };
 
-transport.sendMail(data)
-    .then(() => console.log("Email send success"))
-    .catch(error => console.error(error.message));
+// transport.sendMail(data)
+//     .then(() => console.log("Email send success"))
+//     .catch(error => console.error(error.message));
   
 export default sendEmail;

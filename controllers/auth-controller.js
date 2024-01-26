@@ -8,9 +8,10 @@ import path from "path";
 import jwt from "jsonwebtoken";
 import fs from "fs/promises";
 import Jimp from "jimp";
+import { nanoid } from "nanoid";
+const { UKR_NET_FROM, BASE_URL } = process.env;
 
 const avatarPath = path.resolve("public", "avatars");
-
 
 const { JWT_SECRET } = process.env;
 
@@ -28,9 +29,19 @@ const userRegister = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
+    const verificationToken = nanoid();
     const avatarURL = gravatar.url(email);
-
     const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL });
+    
+    const verifyEmail = {
+        from: UKR_NET_FROM,
+        to: email,
+        subject: "Verify EMAIL",
+        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click to verify Email</a>`
+    };
+
+    await sendEmail(verifyEmail);
+
     res.status(201).json({
         user: {
             email: newUser.email,
