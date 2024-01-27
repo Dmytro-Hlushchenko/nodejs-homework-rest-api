@@ -22,4 +22,4 @@ router.patch("/:contactId/favorite", isValidId, isEmptyBody, validateBody(contac
 router.delete('/:contactId', isValidId, controller.removeContact );
 
 
-export default router;
+export default router;  

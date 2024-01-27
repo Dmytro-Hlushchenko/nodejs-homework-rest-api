@@ -18,8 +18,7 @@ const { JWT_SECRET } = process.env;
 if (!JWT_SECRET) {
     console.error("Error: JWT_SECRET is not defined");
     process.exit(1);
-}
-
+};
 const userRegister = async (req, res) => {
     
     const { email, password } = req.body;
@@ -49,7 +48,6 @@ const userRegister = async (req, res) => {
         }
     });
 };
-
 const verify = async (req, res) => {
     const { verificationToken } = req.params;
     const user = await User.findOne({ verificationToken });
@@ -63,7 +61,28 @@ const verify = async (req, res) => {
         message: 'Verification successful',
     });
 };
+const resendVerifyEmail = async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw HttpError(400, "missing required field email");
+    };
+    if (user.verify) {
+        throw HttpError(400, "Verification has already been passed")
+    };
+    const verifyEmail = {
+        from: UKR_NET_FROM,
+        to: email,
+        subject: "Verify EMAIL",
+        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click to verify Email</a>`
+    };
 
+    await sendEmail(verifyEmail);
+
+    res.json({
+        message: "Verification email sent"
+    });
+};
 const updateAvatar = async (req, res) => {
     if (!req.file){
         throw HttpError(400, "No avatar file uploaded");
@@ -136,6 +155,7 @@ const logout = async (req, res) => {
 export default {  
     userRegister: ctrlWrapper(userRegister),
     verify: ctrlWrapper(verify),
+    resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
     updateAvatar: ctrlWrapper(updateAvatar),
     userLogin: ctrlWrapper(userLogin),
     getCurrent: ctrlWrapper(getCurrent),
