@@ -63,18 +63,22 @@ const verify = async (req, res) => {
 };
 const resendVerifyEmail = async (req, res) => {
     const { email } = req.body;
+
     const user = await User.findOne({ email });
+    
     if (!user) {
         throw HttpError(400, "missing required field email");
     };
+
     if (user.verify) {
-        throw HttpError(400, "Verification has already been passed")
+        throw HttpError(400, "Verification has already been passed");
     };
+
     const verifyEmail = {
         from: UKR_NET_FROM,
         to: email,
         subject: "Verify EMAIL",
-        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click to verify Email</a>`
+        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click to verify Email</a>`
     };
 
     await sendEmail(verifyEmail);

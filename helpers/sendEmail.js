@@ -19,9 +19,5 @@ const sendEmail = (data) => {
     const email = { ...data, from: UKR_NET_FROM };
     return transport.sendMail(email);
 };
-
-// transport.sendMail(data)
-//     .then(() => console.log("Email send success"))
-//     .catch(error => console.error(error.message));
   
 export default sendEmail;
