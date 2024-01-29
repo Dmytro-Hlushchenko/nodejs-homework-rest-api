@@ -119,7 +119,7 @@ const userLogin = async (req, res) => {
     };
 
     if (!user.verify) { 
-        throw HttpError(404, "User not found");
+        throw HttpError(404, "User is not verify");
     };
 
     const passwordCompare = await bcrypt.compare(password, user.password);
